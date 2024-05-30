@@ -1,35 +1,19 @@
 <template>
-  <div class="md:ml-[300px] p-4 ml-0">
-    <div class="bg-[#fff] rounded-xl p-4">
-      <h1 class="text-3xl font-bold underline text-[var(--pink)]">
-        Hello world!
+  <div class="lg:ml-[300px] p-8 ml-0">
+    <div class="bg-[#fff] rounded-xl p-8">
+       
+      <h1 class="text-[35px] font-bold text-[var(--pink)]">
+       จัดการบทความ
       </h1>
 
       <Vueform>
         <TextElement name="hello_world" label="Hello" placeholder="World" />
       </Vueform>
 
-      <UButton label="Open" @click="isOpen = true" />
+      <UButton label="Open" @click="fn_openDialogAdd" />
     </div>
 
-    <UModal v-model="isOpen">
-      <UCard
-        :ui="{
-          ring: '',
-          divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-        }"
-      >
-        <template #header>
-          <Placeholder class="h-8" />
-        </template>
-
-        <Placeholder class="h-32" />
-
-        <template #footer>
-          <Placeholder class="h-8" />
-        </template>
-      </UCard>
-    </UModal>
+    <DialogAddBlog :show="isOpen" :onClose="closeDialog"/>
   </div>
 </template>
 
@@ -39,6 +23,14 @@ definePageMeta({
 });
 
 const isOpen = ref(false);
+
+const fn_openDialogAdd = () => {
+  isOpen.value = true
+}
+
+const closeDialog = () => {
+  isOpen.value = false
+}
 
 useHead({
   title: "Zycoda Admin",

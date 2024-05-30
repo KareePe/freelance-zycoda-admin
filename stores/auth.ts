@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
+import axios from "axios";
 
 interface UserPayloadInterface {
   username: string;
   password: string;
 }
+
+const env = useRuntimeConfig();
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -12,9 +15,16 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     async authenticateUser({ username, password }: UserPayloadInterface) {
-      if (username === "admin" && password === "admin@1234") {
+      let payload = {
+        username: username,
+        password: password,
+      };
+
+      const result = await axios.post(env.public.API_BASE_URL + "/auth", payload);
+
+      if (result.data.status === "OK") {
         const token = useCookie("token", { maxAge: 60 * 60 }); // useCookie new hook in nuxt 3
-        token.value = "admin"; // set token to cookie
+        token.value = result.data.message[0].username; // set token to cookie
         this.authenticated = true; // set authenticated  state value to true
       } else {
         const token = useCookie("token");

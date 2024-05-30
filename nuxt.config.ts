@@ -28,4 +28,9 @@ export default defineNuxtConfig({
     },
   },
   modules: ["@nuxt/ui", "@vueform/nuxt", "@pinia/nuxt"],
+  runtimeConfig: {
+    public: {
+      API_BASE_URL: process.env.API_BASE_URL,
+    },
+  },
 });

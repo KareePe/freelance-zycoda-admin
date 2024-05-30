@@ -10,11 +10,6 @@
         class="w-[150px] dark:hidden"
         alt=""
       />
-      <img
-        src="/images/logo/light/logo-light.png"
-        class="w-[150px] dark:block"
-        alt=""
-      />
       <p class="text-[var(--black)] font-bold text-[35px] dark:text-[#fff]">
         Sign in
       </p>
@@ -114,14 +109,25 @@ const fn_auth = async () => {
 
   await authenticateUser(payload);
 
+  console.log(authenticated.value)
+
   if (authenticated.value === true) {
     router.push("/");
   } else {
     status_auth.value = true;
+    loading.value = false
   }
   
-  loading.value = false;
 };
+
+// onMounted(() => {
+//   const token = useCookie("token");
+
+//   if (token.value) {
+//     // check if value exists
+//     authenticated.value = true; // update the state to authenticated
+//   }
+// })
 </script>
 
 <style></style>
