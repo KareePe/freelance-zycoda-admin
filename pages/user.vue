@@ -1,6 +1,6 @@
 <template>
   <div class="lg:ml-[300px] p-8 ml-0">
-    <div class="bg-[#fff] rounded-xl p-8">
+    <div class="bg-[#fff] rounded-xl p-8 dark:bg-[#111827]">
       <div class="flex justify-between items-center">
         <h1 class="text-[35px] font-bold text-[var(--pink)]">
           จัดการผู้ดูแลระบบ

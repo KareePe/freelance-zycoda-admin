@@ -9,4 +9,10 @@ export default defineConfig({
   theme: vueform,
   locales: { en },
   locale: 'en',
+  endpoints: {
+    upload_file: {
+      url: '/upload_file',
+      method: 'POST'
+    }
+  }
 })

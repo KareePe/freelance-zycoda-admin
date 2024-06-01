@@ -2,11 +2,16 @@
   <nav
     class="max-w-[300px] w-full h-[100vh] fixed lg:left-0 -left-[300px] z-[9999] transition-all duration-300 sidebar"
   >
-    <div class="bg-[#fff] h-[100vh] w-full">
+    <div class="bg-[#fff] dark:bg-[#111827] h-[100vh] w-full">
       <div class="px-6 pt-12 pb-8">
         <img
           src="/images/logo/dark/logo-dark.png"
-          class="w-[150px]"
+          class="w-[150px] block dark:hidden"
+          alt="logo zycoda"
+        />
+        <img
+          src="/images/logo/light/logo-light.png"
+          class="w-[150px] hidden dark:block"
           alt="logo zycoda"
         />
         <hr class="border-b border-[var(--black)]/10 mt-[25px]" />
