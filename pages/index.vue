@@ -19,12 +19,21 @@
               <i class="loader --6" />
             </div>
           </template>
-          <template #articleImg-data="{ row }">
-            <img :src="row.articleImg" style="width: 150px !important;" alt="" />
+          <template #articleDesc-data="{ row }">
+            <div
+              v-html="row.articleDesc"
+              style="
+                width: 250px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+              class="h-[150px]"
+            ></div>
           </template>
-          <!-- <template #item-key="{ articleImg }">
-            <img :src="articleImg" style="width: 50px; height: 50px" alt="" />
-          </template> -->
+          <template #articleImg-data="{ row }">
+            <img :src="row.articleImg" style="width: 650px !important" alt="" />
+          </template>
           <template #actions-data="{ row }">
             <UDropdown :items="items(row)">
               <UButton
@@ -49,6 +58,11 @@
     </div>
 
     <DialogAddArticle :show="isOpen" :onClose="closeDialog" />
+    <DialogEditUser
+      :show="isOpenEdit"
+      :item="blogItemEdit"
+      :onClose="closeDialog"
+    />
   </div>
 </template>
 
@@ -64,15 +78,22 @@ import axios from "axios";
 const env = useRuntimeConfig();
 
 const isOpen = ref(false);
+const isOpenEdit = ref(false);
 let blogItemEdit = "";
 
 const fn_openDialogAdd = () => {
   isOpen.value = true;
-  console.log(isOpen.value);
+};
+
+const fn_openDialogEdit = (item) => {
+  blogItemEdit = item;
+  isOpenEdit.value = true;
 };
 
 const closeDialog = () => {
   isOpen.value = false;
+  isOpenEdit.value = false;
+  fn_blog();
 };
 
 let pending = ref(true);
@@ -175,7 +196,7 @@ const fn_confirmDelete = async (item) => {
       uuid: item.articleId,
     };
 
-    console.log(payload)
+    console.log(payload);
 
     const result = await axios.delete(env.public.API_BASE_URL + "/blog", {
       data: payload,

@@ -221,7 +221,7 @@ const uploadImg = async () => {
       });
     }
 
-    loading.value = false;
+    // loading.value = false;
   } catch (err) {
     loading.value = false;
     console.log(err, "catch");
