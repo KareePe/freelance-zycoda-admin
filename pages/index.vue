@@ -58,7 +58,7 @@
     </div>
 
     <DialogAddArticle :show="isOpen" :onClose="closeDialog" />
-    <DialogEditUser
+    <DialogEditArticle
       :show="isOpenEdit"
       :item="blogItemEdit"
       :onClose="closeDialog"
@@ -153,8 +153,8 @@ const fn_blog = async () => {
     pending.value = true;
 
     const result = await axios.get(env.public.API_BASE_URL + "/blog");
-
-    let data = result.data.map((article) => ({
+console.log(result.data)
+    let data = result.data.message.map((article) => ({
       ...article,
       articleImg: "https://raw.thearkcoding.com/uploads/" + article.articleImg,
     }));

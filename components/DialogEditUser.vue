@@ -16,7 +16,7 @@
           ></vue-feather>
         </div>
       </template>
-{{ props.item }}
+<!-- {{ props.item }} -->
       <Vueform
         v-model="data"
         ref="form$"
