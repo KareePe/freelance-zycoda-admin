@@ -152,8 +152,8 @@ const fn_blog = async () => {
   try {
     pending.value = true;
 
-    const result = await axios.get(env.public.API_BASE_URL + "/blog");
-console.log(result.data)
+    const result = await axios.get(env.public.API_BASE_URL + "/getBlog");
+    console.log(result.data);
     let data = result.data.message.map((article) => ({
       ...article,
       articleImg: "https://raw.thearkcoding.com/uploads/" + article.articleImg,
