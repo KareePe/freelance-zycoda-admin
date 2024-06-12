@@ -152,7 +152,7 @@ const fn_blog = async () => {
   try {
     pending.value = true;
 
-    const result = await axios.get(env.public.API_BASE_DEV + "/getBlog");
+    const result = await axios.get(env.public.API_BASE_URL + "/getBlog");
     console.log(result.data);
     let data = result.data.message.map((article) => ({
       ...article,
@@ -198,7 +198,7 @@ const fn_confirmDelete = async (item) => {
 
     console.log(payload);
 
-    const result = await axios.delete(env.public.API_BASE_DEV + "/blog", {
+    const result = await axios.delete(env.public.API_BASE_URL + "/blog", {
       data: payload,
     });
 

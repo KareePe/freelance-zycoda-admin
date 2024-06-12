@@ -126,7 +126,7 @@ const fn_editUser = async () => {
     console.log(payload)
 
     const result = await axios.put(
-      env.public.API_BASE_DEV + "/enrol",
+      env.public.API_BASE_URL + "/enrol",
       payload
     );
 

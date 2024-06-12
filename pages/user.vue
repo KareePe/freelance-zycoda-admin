@@ -131,7 +131,7 @@ const rows = computed(() => {
 
 const fn_users = async () => {
   try {
-    const result = await axios.get(env.public.API_BASE_DEV + "/enrol");
+    const result = await axios.get(env.public.API_BASE_URL + "/enrol");
 
     if (result.data.status === "OK") {
       console.log(result.data.message);
@@ -174,7 +174,7 @@ const fn_confirmDelete = async (item) => {
       uuid: item.userId,
     };
 
-    const result = await axios.delete(env.public.API_BASE_DEV + "/enrol", {
+    const result = await axios.delete(env.public.API_BASE_URL + "/enrol", {
       data: payload,
     });
 

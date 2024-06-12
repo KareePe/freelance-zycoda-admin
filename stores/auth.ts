@@ -21,7 +21,7 @@ export const useAuthStore = defineStore("auth", {
       };
 
       const result = await axios.post(
-        env.public.API_BASE_DEV + "/auth",
+        env.public.API_BASE_URL + "/auth",
         payload
       );
 

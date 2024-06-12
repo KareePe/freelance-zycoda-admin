@@ -272,7 +272,7 @@ const fn_addBlog = async (img) => {
 
     console.log(payload, "payload");
 
-    const result = await axios.put(env.public.API_BASE_DEV + "/blog", payload);
+    const result = await axios.put(env.public.API_BASE_URL + "/blog", payload);
 
     if (result.data.status === "OK") {
       Swal.fire({
