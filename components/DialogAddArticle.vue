@@ -1,5 +1,5 @@
 <template>
-  <UModal v-model="props.show">
+  <UModal v-model="props.show" :fullscreen="full">
     <UCard
       :ui="{
         ring: '',
@@ -8,12 +8,27 @@
     >
       <template #header>
         <div class="flex justify-between items-center">
+          <div class="flex gap-2 items-center">
+            <div
+              class="bg-red-500 w-[16px] h-[16px] flex items-center justify-center rounded-full"
+            >
+              <vue-feather
+                @click="closeDialog()"
+                type="x"
+                class="text-red-800 w-[12px] font-bold cursor-pointer"
+              ></vue-feather>
+            </div>
+            <div
+              class="bg-lime-500 w-[16px] h-[16px] flex items-center justify-center rounded-full"
+            >
+              <vue-feather
+                @click="full === false ? (full = true) : (full = false)"
+                :type="full === false ? 'maximize-2' : 'minimize-2'"
+                class="text-lime-800 w-[10px] font-bold cursor-pointer"
+              ></vue-feather>
+            </div>
+          </div>
           <p class="text-[20px] font-bold">เพิ่มบทความ</p>
-          <vue-feather
-            @click="closeDialog()"
-            type="x"
-            class="text-[var(--black)] w-[16px] cursor-pointer"
-          ></vue-feather>
         </div>
       </template>
 
@@ -108,6 +123,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const env = useRuntimeConfig();
+
+const userId = useCookie("uuid");
+
+let full = ref(false);
 
 let previewURL = ref(null);
 let selectedImage = ref(null);
@@ -240,12 +259,13 @@ const fn_addBlog = async (img) => {
     loading.value = true;
 
     let payload = {
+      userId: userId.value,
       articleTopic: form$.value.data.topic,
       articleDesc: form$.value.data.editor,
       articleImg: img,
     };
 
-    const result = await axios.post(env.public.API_BASE_URL + "/blog", payload);
+    const result = await axios.post(env.public.API_BASE_DEV + "/blog", payload);
 
     if (result.data.status === "OK") {
       Swal.fire({

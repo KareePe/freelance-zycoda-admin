@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="max-w-[300px] w-full h-[100vh] fixed lg:left-0 -left-[300px] z-[9999] transition-all duration-300 sidebar"
+    class="max-w-[300px] w-full h-[100vh] fixed lg:left-0 -left-[300px] z-[9] transition-all duration-300 sidebar"
   >
     <div class="bg-[#fff] dark:bg-[#111827] h-[100vh] w-full">
       <div class="px-6 pt-12 pb-8">
@@ -69,7 +69,7 @@
   </nav>
 
   <div class="lg:hidden block px-4 pt-4">
-    <div class="bg-[#fff] w-full h-[50px] flex rounded-lg items-center px-4">
+    <div class="bg-[#fff] w-full h-[50px] flex rounded-lg items-center px-4 cursor-pointer">
       <vue-feather
         @click="fn_openSidebar()"
         type="menu"
@@ -79,7 +79,7 @@
   </div>
 
   <div
-    class="fixed hidden w-full h-full bg-black/[0.4] top-[0] left-[9999rem] z-[999] transition-opacity duration-300 opacity-0"
+    class="fixed hidden w-full h-full bg-black/[0.4] top-[0] left-[9999rem] z-[2] transition-opacity duration-300 opacity-0"
     id="mobile-drawer"
     @click="fn_openSidebar()"
   ></div>

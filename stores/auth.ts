@@ -20,11 +20,16 @@ export const useAuthStore = defineStore("auth", {
         password: password,
       };
 
-      const result = await axios.post(env.public.API_BASE_URL + "/auth", payload);
+      const result = await axios.post(
+        env.public.API_BASE_DEV + "/auth",
+        payload
+      );
 
       if (result.data.status === "OK") {
-        const token = useCookie("token", { maxAge: 60 * 60 }); // useCookie new hook in nuxt 3
-        token.value = result.data.message[0].username; // set token to cookie
+        const token = useCookie("token", { maxAge: 60 * 60 });
+        const uuid = useCookie("uuid", { maxAge: 60 * 60 }); // useCookie new hook in nuxt 3
+        token.value = result.data.message[0].username;
+        uuid.value = result.data.message[0].userId; // set token to cookie
         this.authenticated = true; // set authenticated  state value to true
       } else {
         const token = useCookie("token");
@@ -34,8 +39,10 @@ export const useAuthStore = defineStore("auth", {
     },
     logUserOut() {
       const token = useCookie("token"); // useCookie new hook in nuxt 3
+      const uuid = useCookie("uuid");
       this.authenticated = false; // set authenticated  state value to false
-      token.value = null; // clear the token cookie
+      token.value = null;
+      uuid.value = null; // clear the token cookie
     },
   },
 });

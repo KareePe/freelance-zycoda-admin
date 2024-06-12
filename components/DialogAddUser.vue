@@ -122,7 +122,7 @@ const fn_addUser = async () => {
     };
 
     const result = await axios.post(
-      env.public.API_BASE_URL + "/enrol",
+      env.public.API_BASE_DEV + "/enrol",
       payload
     );
 

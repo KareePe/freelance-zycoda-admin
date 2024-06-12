@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:ml-[300px] p-8 ml-0">
+  <div class="lg:ml-[300px] lg:p-8 p-4 ml-0">
     <div class="bg-[#fff] rounded-xl p-8 dark:bg-[#111827]">
       <div class="flex justify-between items-center">
         <h1 class="text-[35px] font-bold text-[var(--pink)]">จัดการบทความ</h1>
@@ -152,7 +152,7 @@ const fn_blog = async () => {
   try {
     pending.value = true;
 
-    const result = await axios.get(env.public.API_BASE_URL + "/getBlog");
+    const result = await axios.get(env.public.API_BASE_DEV + "/getBlog");
     console.log(result.data);
     let data = result.data.message.map((article) => ({
       ...article,
@@ -198,7 +198,7 @@ const fn_confirmDelete = async (item) => {
 
     console.log(payload);
 
-    const result = await axios.delete(env.public.API_BASE_URL + "/blog", {
+    const result = await axios.delete(env.public.API_BASE_DEV + "/blog", {
       data: payload,
     });
 

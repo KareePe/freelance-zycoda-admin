@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:ml-[300px] p-8 ml-0">
+  <div class="lg:ml-[300px] lg:p-8 p-4 ml-0">
     <div class="bg-[#fff] rounded-xl p-8 dark:bg-[#111827]">
       <div class="flex justify-between items-center">
         <h1 class="text-[35px] font-bold text-[var(--pink)]">
@@ -131,7 +131,7 @@ const rows = computed(() => {
 
 const fn_users = async () => {
   try {
-    const result = await axios.get(env.public.API_BASE_URL + "/enrol");
+    const result = await axios.get(env.public.API_BASE_DEV + "/enrol");
 
     if (result.data.status === "OK") {
       console.log(result.data.message);
@@ -174,7 +174,7 @@ const fn_confirmDelete = async (item) => {
       uuid: item.userId,
     };
 
-    const result = await axios.delete(env.public.API_BASE_URL + "/enrol", {
+    const result = await axios.delete(env.public.API_BASE_DEV + "/enrol", {
       data: payload,
     });
 
