@@ -102,10 +102,62 @@
           เพิ่มข้อมูล
         </ButtonElement>
       </Vueform>
-
+      <button
+        name="button"
+        class="w-full !bg-transparent h-[35px] mt-2 rounded-md !border-[var(--pink)] !border hover:!bg-[var(--pink)] !text-[var(--pink)] hover:!text-[#fff] !transition-all !duration-300 hover:!skew-x-0 hover:!skew-y-0"
+        :loading="loading"
+        @click="fn_preview()"
+      >
+        ดูตัวอย่าง
+      </button>
+      <p class="mt-2 text-red-500">{{ text_preview_err }}</p>
       <template #footer>
         <Placeholder class="h-8" />
       </template>
+    </UCard>
+  </UModal>
+
+  <UModal v-model="previewOpen" fullscreen>
+    <UCard>
+      <template #header>
+        <div class="flex justify-between items-center">
+          <div class="flex gap-2 items-center">
+            <div
+              class="bg-red-500 w-[16px] h-[16px] flex items-center justify-center rounded-full"
+            >
+              <vue-feather
+                @click="previewOpen = false"
+                type="x"
+                class="text-red-800 w-[12px] font-bold cursor-pointer"
+              ></vue-feather>
+            </div>
+          </div>
+          <p class="text-[20px] font-bold">ตัวอย่างบทความ</p>
+        </div>
+      </template>
+
+      <div class="w-full relative">
+        <div class="container mx-auto p-4">
+          <img
+            :src="previewImg"
+            class="block rounded-[25px] shadow-lg"
+            alt=""
+          />
+          <div class="flex items-center date my-4">
+            <p class="text-[#BF2C7B] font-bold">admin</p>
+            <p class="text-[#000]/40">
+              {{ moment().startOf("day").fromNow() }}
+            </p>
+            <p class="flex items-center gap-2 text-[#000]/60">
+              <vue-feather type="eye" class="w-[15px]"></vue-feather>230
+            </p>
+          </div>
+
+          <h1 class="text-[35px] font-bold">{{ previewTopic }}</h1>
+
+          <div v-html="previewEditor" class="desc my-[50px]"></div>
+        </div>
+      </div>
     </UCard>
   </UModal>
 </template>
@@ -121,6 +173,7 @@ import VueFeather from "vue-feather";
 import md5 from "md5";
 import axios from "axios";
 import Swal from "sweetalert2";
+import moment from "moment";
 
 const env = useRuntimeConfig();
 
@@ -140,6 +193,13 @@ const data = ref({
 });
 
 let loading = ref(false);
+
+let previewOpen = ref(false);
+let previewImg = ref(null);
+let previewTopic = ref(null);
+let previewEditor = ref(null);
+
+const text_preview_err = ref("");
 
 const closeDialog = () => {
   selectedImage.value = null;
@@ -292,6 +352,22 @@ const fn_addBlog = async (img) => {
     });
   }
 };
+
+const fn_preview = () => {
+  previewImg.value = previewURL.value;
+  previewTopic.value = form$.value.data.topic;
+  previewEditor.value = form$.value.data.editor;
+  // if (
+  //   previewImg.value === null ||
+  //   previewTopic.value === null ||
+  //   previewEditor.value === null
+  // ) {
+  //   text_preview_err.value = 'ไม่สามารถดูตัวอย่างบทความได้ กรุณากรอกข้อมูลให้ครบถ้วน'
+  // } else {
+  //   text_preview_err.value = ''
+  previewOpen.value = true;
+  // }
+};
 </script>
 
 <style>
@@ -300,5 +376,14 @@ const fn_addBlog = async (img) => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.date p::after {
+  content: "|";
+  margin: 0 10px;
+}
+
+.date p:nth-last-child(1)::after {
+  content: "";
 }
 </style>
