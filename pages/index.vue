@@ -152,7 +152,7 @@ const fn_blog = async () => {
   try {
     pending.value = true;
 
-    const result = await axios.get(env.public.API_BASE_URL + "/getBlog");
+    const result = await axios.get(env.public.API_BASE_URL + "/blog");
     console.log(result.data);
     let data = result.data.message.map((article) => ({
       ...article,

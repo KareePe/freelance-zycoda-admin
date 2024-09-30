@@ -86,7 +86,7 @@
             :readonly="loading"
           />
 
-          <EditorElement
+          <!-- <EditorElement
             name="editor"
             :rules="['required']"
             :columns="{
@@ -96,8 +96,18 @@
               lg: 12,
             }"
             :readonly="loading"
-          />
+          /> -->
         </GroupElement>
+
+        <div class="col-span-12 h-[fit-content]">
+          <QuillEditor
+            :options="options"
+            :content="item.articleDesc"
+            v-model:content="data.editor"
+            contentType="html"
+            class="min-h-[250px]"
+          />
+        </div>
 
         <ButtonElement
           name="button"
@@ -128,15 +138,45 @@ import VueFeather from "vue-feather";
 import md5 from "md5";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const env = useRuntimeConfig();
 
 let full = ref(false);
 
+const toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  ["link", "image", "video"],
+  [{ header: 1 }, { header: 2 }], // custom button values
+  [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ direction: "rtl" }], // text direction
+
+  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+
+  ["clean"], // remove formatting button
+];
+const options = ref({
+  modules: {
+    toolbar: toolbarOptions,
+  },
+  placeholder: "ระบุรายละเอียดบทความ",
+  readOnly: false,
+  theme: "snow",
+});
+
 let previewURL = ref(null);
 let selectedImage = ref(null);
 let base64String = ref("");
 const file = ref(null);
+let editorImgBase64 = ref("");
 
 const form$ = ref(null);
 const data = ref({
@@ -266,7 +306,7 @@ const fn_addBlog = async (img) => {
     let payload = {
       uuid: props.item.articleId,
       articleTopic: form$.value.data.topic,
-      articleDesc: form$.value.data.editor,
+      articleDesc: data.value.editor || props.item.articleDesc,
       articleImg: img || "",
     };
 
@@ -306,6 +346,37 @@ const fn_addBlog = async (img) => {
     });
   }
 };
+
+const fn_viewChange = () => {
+  let htmlString = data.value.editor;
+  let parser = new DOMParser();
+  let doc = parser.parseFromString(htmlString, "text/html");
+  let imgTag = doc.querySelector("img");
+  if (imgTag) {
+    // If the img tag is found
+    let imgSrc = imgTag.src; // Get the src value
+
+    if (selectedImage.value === null) {
+      previewURL.value = imgSrc;
+      editorImgBase64.value = imgSrc;
+    } else {
+      editorImgBase64.value = imgSrc;
+    }
+  } else {
+    // If the img tag is not found
+    console.log("Image tag not found!");
+  }
+};
+
+const emit = defineEmits(['update:props.item.articleDesc']);
+
+if (!process.server) {
+  const { QuillEditor } = await import('@vueup/vue-quill');
+  const { vueApp } = useNuxtApp();
+  if (!vueApp._context.components.QuillEditor) {
+    vueApp.component('QuillEditor', QuillEditor);
+  }
+}
 
 watch(
   () => props.show,

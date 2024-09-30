@@ -80,9 +80,11 @@
             :readonly="loading"
           />
 
-          <EditorElement
+          <!--<EditorElement
             name="editor"
             :rules="['required']"
+            :accept="['jpg', 'jpeg', 'png']"
+            endpoint="/attachment/upload"
             :columns="{
               default: 12,
               sm: 12,
@@ -91,7 +93,17 @@
             }"
             :readonly="loading"
           />
+          -->
         </GroupElement>
+        <div class="col-span-12 h-[fit-content]">
+          <QuillEditor
+            :options="options"
+            v-model:content="data.editor"
+            contentType="html"
+            class="min-h-[250px]"
+            @editorChange="fn_viewChange()"
+          />
+        </div>
 
         <ButtonElement
           name="button"
@@ -174,6 +186,8 @@ import md5 from "md5";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const env = useRuntimeConfig();
 
@@ -181,10 +195,38 @@ const userId = useCookie("uuid");
 
 let full = ref(false);
 
+const toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  ["link", "image", "video"],
+  [{ header: 1 }, { header: 2 }], // custom button values
+  [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ direction: "rtl" }], // text direction
+
+  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+
+  ["clean"], // remove formatting button
+];
+const options = ref({
+  modules: {
+    toolbar: toolbarOptions,
+  },
+  placeholder: "ระบุรายละเอียดบทความ",
+  readOnly: false,
+  theme: "snow",
+});
+
 let previewURL = ref(null);
 let selectedImage = ref(null);
 let base64String = ref("");
 const file = ref(null);
+let editorImgBase64 = ref("");
 
 const form$ = ref(null);
 const data = ref({
@@ -205,6 +247,7 @@ const closeDialog = () => {
   selectedImage.value = null;
   base64String.value = "";
   previewURL.value = null;
+  editorImgBase64.value = "";
   data.value.topic = "";
   data.value.editor = "";
   props.onClose();
@@ -280,24 +323,39 @@ const uploadImg = async () => {
   try {
     loading.value = true;
 
-    const formData = new FormData();
-    formData.append("image", selectedImage.value);
+    let result = "";
 
-    const result = await axios.post(
-      "https://raw.thearkcoding.com/upload.php",
-      formData
-    );
+    if (selectedImage.value !== null) {
+      const formData = new FormData();
+      formData.append("image", selectedImage.value);
+
+      result = await axios.post(
+        "https://raw.thearkcoding.com/upload.php",
+        formData
+      );
+    } else {
+      let payload = JSON.stringify({
+        image: editorImgBase64.value,
+      });
+      result = await axios.post(
+        "https://raw.thearkcoding.com/upload_base64.php",
+        payload
+      );
+    }
+
+    // console.log(result);
 
     if (result.data.status === "success") {
       fn_addBlog(result.data.data.file_name);
-      //   console.log(result.data.data.file_name);
+      console.log(result.data.data.file_name);
     } else {
-      Swal.fire({
-        title: "ผิดพลาด!",
-        text: "อัพโหลดรูปไม่สำเร็จ",
-        icon: "error",
-        confirmButtonText: "ตกลง",
-      });
+      // Swal.fire({
+      //   title: "ผิดพลาด!",
+      //   text: "อัพโหลดรูปไม่สำเร็จ",
+      //   icon: "error",
+      //   confirmButtonText: "ตกลง",
+      // });
+      fn_addBlog("logo.png");
     }
 
     // loading.value = false;
@@ -321,9 +379,11 @@ const fn_addBlog = async (img) => {
     let payload = {
       userId: userId.value,
       articleTopic: form$.value.data.topic,
-      articleDesc: form$.value.data.editor,
+      articleDesc: data.value.editor,
       articleImg: img,
     };
+
+    console.log(payload);
 
     const result = await axios.post(env.public.API_BASE_URL + "/blog", payload);
 
@@ -354,19 +414,31 @@ const fn_addBlog = async (img) => {
 };
 
 const fn_preview = () => {
-  previewImg.value = previewURL.value;
+  previewImg.value = previewURL.value || editorImgBase64.value;
   previewTopic.value = form$.value.data.topic;
   previewEditor.value = form$.value.data.editor;
-  // if (
-  //   previewImg.value === null ||
-  //   previewTopic.value === null ||
-  //   previewEditor.value === null
-  // ) {
-  //   text_preview_err.value = 'ไม่สามารถดูตัวอย่างบทความได้ กรุณากรอกข้อมูลให้ครบถ้วน'
-  // } else {
-  //   text_preview_err.value = ''
   previewOpen.value = true;
-  // }
+};
+
+const fn_viewChange = () => {
+  let htmlString = data.value.editor;
+  let parser = new DOMParser();
+  let doc = parser.parseFromString(htmlString, "text/html");
+  let imgTag = doc.querySelector("img");
+  if (imgTag) {
+    // If the img tag is found
+    let imgSrc = imgTag.src; // Get the src value
+
+    if (selectedImage.value === null) {
+      previewURL.value = imgSrc;
+      editorImgBase64.value = imgSrc;
+    } else {
+      editorImgBase64.value = imgSrc;
+    }
+  } else {
+    // If the img tag is not found
+    console.log("Image tag not found!");
+  }
 };
 </script>
 
