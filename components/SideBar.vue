@@ -46,6 +46,20 @@
               <p>ผู้ดูแลระบบ</p>
             </NuxtLink>
           </li>
+          <li
+            class="px-4 group transition-all duration-150 rounded-xl hover:bg-[#e3e6f6] flex items-center gap-4 h-[45px]"
+          >
+            <NuxtLink
+              to="/activities"
+              class="!text-[#8b92bd] flex items-center gap-4 w-full group-hover:!text-[var(--blue)] group-hover:font-bold transition-all duration-150"
+            >
+              <vue-feather
+                type="cloud"
+                class="text-[#8b92bd] w-[16px] group-hover:!text-[var(--blue)] group-hover:font-bold transition-all duration-150"
+              ></vue-feather>
+              <p>กิจกรรม</p>
+            </NuxtLink>
+          </li>
         </ul>
 
         <ul class="px-2">

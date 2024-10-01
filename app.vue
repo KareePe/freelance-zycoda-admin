@@ -13,3 +13,9 @@ useHead({
   ]
 })
 </script>
+
+<style>
+body{
+  @apply bg-[#f5f5f5] dark:bg-[#262626]
+}
+</style>

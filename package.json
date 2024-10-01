@@ -24,7 +24,8 @@
     "vue": "^3.4.27",
     "vue-feather": "^2.0.0",
     "vue-router": "^4.3.2",
-    "@vueup/vue-quill": "^1.2.0"
+    "@vueup/vue-quill": "^1.2.0",
+    "lightgallery": "^2.7.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
